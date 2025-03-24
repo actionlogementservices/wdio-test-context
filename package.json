@@ -1,0 +1,58 @@
+{
+  "name": "@actionlogementservices/wdio-test-context",
+  "version": "1.0.0",
+  "description": "A framework to add test context to webdriverio end to end tests.",
+  "main": "src/index.js",
+  "type": "module",
+  "types": "src/types.d.ts",
+  "exports": {
+    ".": "./src/index.js",
+    "./types": "./src/types.d.ts"
+  },
+  "scripts": {
+    "prettier": "prettier \"./src/**/*.js\" --write",
+    "eslint": "eslint \"./src/**/*.js\"",
+    "doc": "jsdoc -c ./.jsdoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actionlogementservices/wdio-test-context.git"
+  },
+  "keywords": [
+    "wdio"
+  ],
+  "author": "Action Logement Services",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/actionlogementservices/wdio-test-context/issues"
+  },
+  "homepage": "https://github.com/actionlogementservices/wdio-test-context#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.23.0",
+    "@wdio/spec-reporter": "^9.11.0",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-array-func": "^5.0.2",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-unicorn": "^57.0.0",
+    "globals": "^16.0.0",
+    "jsdoc": "^4.0.4",
+    "jsdoc-escape-at": "^1.0.1",
+    "kis-jsdoc-plugin": "^2.2.1",
+    "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.6.0",
+    "azure-devops-node-api": "^14.1.0",
+    "chalk": "^5.4.1",
+    "glob": "^11.0.1",
+    "jspdf": "^3.0.1",
+    "lodash.merge": "^4.6.2",
+    "moment": "^2.30.1",
+    "nodemailer": "^6.10.0"
+  },
+  "peerDependencies": {
+    "@wdio/globals": "^9.12.1"
+  }
+}
