@@ -139,11 +139,12 @@ export default class Page {
    * **Retrieves the list of values** of the specified **select** css selector.
    * Waits during the specified (or default) timeout **before throwing error**.
    * @param {string} css  css selector of the select
+   * @param {number} [childrenCount] optional count of children to wait for (default 1)
    * @param {number} [timeout] optional timeout before throwing error
    * @returns {Promise<string[]>} the corresponding values
    */
-  async getOptions(css, timeout = TIMEOUT) {
-    await this.waitElementHasChildren(css, timeout);
+  async getSelectOptions(css, childrenCount = 1, timeout = TIMEOUT) {
+    await this.waitElementHasChildren(`${css} option`, childrenCount, timeout);
     const options = await $$(`${css} option`).getElements();
     // le tableau des options
     const items = [];
@@ -158,11 +159,12 @@ export default class Page {
    * **Retrieves the selected text** of the specified **select** css selector.
    * Waits during the specified (or default) timeout **before throwing error**.
    * @param {string} css  css selector of the select
+   * @param {number} [childrenCount] optional count of children to wait for (default 1)
    * @param {number} [timeout] optional timeout before throwing error
    * @returns {Promise<string>} the corresponding text
    */
-  async getSelectedText(css, timeout = TIMEOUT) {
-    await this.waitElementHasChildren(css, timeout);
+  async getSelectSelectedText(css, childrenCount = 1, timeout = TIMEOUT) {
+    await this.waitElementHasChildren(`${css} option`, childrenCount, timeout);
     return $(`${css} option:checked`).getText();
   }
 
@@ -170,11 +172,12 @@ export default class Page {
    * **Retrieves the selected value** of the specified **select** css selector.
    * Waits during the specified (or default) timeout **before throwing error**.
    * @param {string} css css selector of the select
+   * @param {number} [childrenCount] optional count of children to wait for (default 1)
    * @param {number} [timeout] optional timeout before throwing error
    * @returns {Promise<string>} the corresponding text
    */
-  async getSelectedValue(css, timeout = TIMEOUT) {
-    await this.waitElementHasChildren(css, timeout);
+  async getSelectSelectedValue(css, childrenCount = 1, timeout = TIMEOUT) {
+    await this.waitElementHasChildren(`${css} option`, childrenCount, timeout);
     return $(`${css} option:checked`).getValue();
   }
 
@@ -319,7 +322,7 @@ export default class Page {
   /**
    * **Waits until the element** specified by the css selector **has children**.
    * **Throws an error** after the specified (or default) timeout has expired.
-   * @param {string} css css selector
+   * @param {string} css css selector that contains children
    * @param {number} [childrenCount] optional count of children to wait for (default 1)
    * @param {number} [timeout] optional timeout before throwing error
    * @returns {Promise<boolean>} true if condition is fullfilled
