@@ -128,7 +128,7 @@ __*return*__ | `Promise.<string>` | *the corresponding inner html*
 
 ---
 
-### `getOptions(css, timeout) ► Promise.<Array.<string>>`
+### `getSelectOptions(css, childrenCount, timeout) ► Promise.<Array.<string>>`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -138,12 +138,13 @@ Waits during the specified (or default) timeout **before throwing error**.
 Parameters | Type | Description
 --- | --- | ---
 __css__ | `string` | *css selector of the select*
+__childrenCount__ | `number` | *optional count of children to wait for (default 1)*
 __timeout__ | `number` | *optional timeout before throwing error*
 __*return*__ | `Promise.<Array.<string>>` | *the corresponding values*
 
 ---
 
-### `getSelectedText(css, timeout) ► Promise.<string>`
+### `getSelectSelectedText(css, childrenCount, timeout) ► Promise.<string>`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -153,12 +154,13 @@ Waits during the specified (or default) timeout **before throwing error**.
 Parameters | Type | Description
 --- | --- | ---
 __css__ | `string` | *css selector of the select*
+__childrenCount__ | `number` | *optional count of children to wait for (default 1)*
 __timeout__ | `number` | *optional timeout before throwing error*
 __*return*__ | `Promise.<string>` | *the corresponding text*
 
 ---
 
-### `getSelectedValue(css, timeout) ► Promise.<string>`
+### `getSelectSelectedValue(css, childrenCount, timeout) ► Promise.<string>`
 
 ![modifier: public](images/badges/modifier-public.png)
 
@@ -168,6 +170,7 @@ Waits during the specified (or default) timeout **before throwing error**.
 Parameters | Type | Description
 --- | --- | ---
 __css__ | `string` | *css selector of the select*
+__childrenCount__ | `number` | *optional count of children to wait for (default 1)*
 __timeout__ | `number` | *optional timeout before throwing error*
 __*return*__ | `Promise.<string>` | *the corresponding text*
 
@@ -335,7 +338,7 @@ __*return*__ | `Promise.<boolean>` | *true if condition is fullfilled*
 
 Parameters | Type | Description
 --- | --- | ---
-__css__ | `string` | *css selector*
+__css__ | `string` | *css selector that contains children*
 __childrenCount__ | `number` | *optional count of children to wait for (default 1)*
 __timeout__ | `number` | *optional timeout before throwing error*
 __*return*__ | `Promise.<boolean>` | *true if condition is fullfilled*

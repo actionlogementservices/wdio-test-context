@@ -38,7 +38,7 @@ Parameters | Type | Description
 --- | --- | ---
 __name__ | `string` | *name of the environment (defined by TARGET_ENV environment variable)*
 __parameters__ | `Record.<string, any>` | *custom parameters (like &#x27;url&#x27;)*
-__environmentOptions__ | `import('./types.js').EnvironmentOptions` | *custom options*
+__environmentOptions__ | `import('./types.d.ts').EnvironmentOptions` | *custom options (like sql or rabbitMQ clients)*
 __*return*__ | [TestContext](src_test-context.md) | **
 
 ---
@@ -128,6 +128,53 @@ Records the current created user.
 
 ---
 
+### `publishMessage(parameterName, exchange, routingKey, type, payload, correlationId) ► Promise.<boolean>`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Published the amqp message to the specified exchange.
+
+Parameters | Type | Description
+--- | --- | ---
+__parameterName__ | `string` | *name of the environment parameter that defines the amqp connection string*
+__exchange__ | `string` | *name of the exchange*
+__routingKey__ | `string` | *routing key*
+__type__ | `string` | *type of the message*
+__payload__ | `T` | *message payload*
+__correlationId__ | `string` | *correlation id for message tracking*
+__*return*__ | `Promise.<boolean>` | **
+
+---
+
+### `executeSql(parameterName, sqlOperation) ► Promise.<T>`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Executes the specified sql operation.
+
+Parameters | Type | Description
+--- | --- | ---
+__parameterName__ | `string` | *name of the environment parameter that defines the sql connection string*
+__sqlOperation__ | `(sql: import('mssql').Request) => T` | *function using the sql request object*
+__*return*__ | `Promise.<T>` | *sql query result*
+
+---
+
+### `runVtomJob(parameterName, appName, jobName) ► Promise.<boolean>`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Runs the specified vtom job.
+
+Parameters | Type | Description
+--- | --- | ---
+__parameterName__ | `string` | *name of the environment parameter that defines the vtom configuration*
+__appName__ | `string` | *vtom application name*
+__jobName__ | `string` | *vtom job name*
+__*return*__ | `Promise.<boolean>` | *true if successful execution*
+
+---
+
 ### `_generateRandomUser(mailService) ► TestUser`
 
 ![modifier: private](images/badges/modifier-private.png)
@@ -160,6 +207,7 @@ Name | Type | Description
 --- | --- | ---
 __user__ | `TestUser` | *Test user @type {TestUser}*
 __mailService__ | [MailService](src_mail-service.md) | *Mail service @type {MailService}*
+__defaultEnvironmentName__ | `undefined` | *Retrieves the default (i.e. the first) environment name.*
 __environmentName__ | `undefined` | *Retrieves the name of the current environment.*
 __environment__ | `undefined` | *Retrieves the configuration of the current environment.*
 __dataset__ | `undefined` | *The current dataset.*

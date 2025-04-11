@@ -46,7 +46,8 @@ export default class TestContextWorkerService {
    * @param {string[]} _specs
    * @param {string} _cid
    */
-  beforeSession(_config, _capabilities, _specs, _cid) {
+  async beforeSession(_config, _capabilities, _specs, _cid) {
+    logger.info(`Using '${this._context.environmentName}' test environement.`);
     logger.debug(
       inspect(filterPrivateProperty(this._context), {
         colors: true,

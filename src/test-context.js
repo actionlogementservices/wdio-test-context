@@ -7,18 +7,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import dotenvFlow from 'dotenv-flow';
 import { faker } from '@faker-js/faker/locale/fr';
 import merge from 'lodash.merge';
 import { SevereServiceError } from 'webdriverio';
 
 import { MailService } from './mail-service.js';
 import { logger } from './logger.js';
+import { executeSql } from './sql-client.js';
+import { publishMessage } from './amqp-client.js';
+import { loadCACertificates } from './ca-loader.js';
+import { runVtomJob } from './vtom-client.js';
 
-/** @typedef {import('./types.js').TestEnvironmentConfiguration} TestEnvironmentConfiguration */
-/** @typedef {import('./types.js').TestUser} TestUser */
-/** @typedef {import('./types.js').MailProviderName} MailProviderName */
-/** @typedef {import('./types.js').DataGenerator} DataGenerator */
-/** @typedef {import('./types.js').LogLevel} LogLevel */
+/** @typedef {import('./types.d.ts').TestEnvironmentConfiguration} TestEnvironmentConfiguration */
+/** @typedef {import('./types.d.ts').TestUser} TestUser */
+/** @typedef {import('./types.d.ts').MailProviderName} MailProviderName */
+/** @typedef {import('./types.d.ts').DataGenerator} DataGenerator */
+/** @typedef {import('./types.d.ts').LogLevel} LogLevel */
 
 export const defaultDatasetName = 'default';
 const defaultRecordedUsersFilename = 'users.json';
@@ -44,7 +49,7 @@ export class TestContext {
    * Implements a test context with environments and dataset in webdriverio.
    * @param {string} name name of the environment (defined by TARGET_ENV environment variable)
    * @param {Record<string, any>} parameters custom parameters (like 'url')
-   * @param {import('./types.js').EnvironmentOptions} [environmentOptions] custom options
+   * @param {import('./types.d.ts').EnvironmentOptions} [environmentOptions] custom options (like sql or rabbitMQ clients)
    * @returns {TestContext}
    */
   setEnvironment(name, parameters, environmentOptions) {
@@ -98,6 +103,11 @@ export class TestContext {
    * @returns {TestContext}
    */
   initialize() {
+    loadCACertificates();
+    // dotenv-flow configuration
+    dotenvFlow.config({
+      node_env: process.env.TARGET_ENV || this.defaultEnvironmentName
+    });
     // email provider
     this.mailService = new MailService(this._mailProviderName ?? defaultMailProviderName);
     // data folder
@@ -143,14 +153,22 @@ export class TestContext {
   }
 
   /**
+   * Retrieves the default (i.e. the first) environment name.
+   * @returns {string}
+   */
+  get defaultEnvironmentName() {
+    if (this._environments.size === 0)
+      throw new SevereServiceError('At least one environment must be set! Check your environment.js file.');
+    return this._environments.keys().next().value;
+  }
+
+  /**
    * Retrieves the name of the current environment.
    * @returns {string}
    */
   get environmentName() {
-    if (this._environments.size === 0)
-      throw new SevereServiceError('At least one environment must be set! Check your environment.js file.');
-    const firstEnvironmentName = this._environments.keys().next().value;
-    return (process.env.TARGET_ENV || firstEnvironmentName).toLowerCase();
+    const defaultEnvironmentName = this.defaultEnvironmentName;
+    return (process.env.TARGET_ENV || defaultEnvironmentName).toLowerCase();
   }
 
   /**
@@ -244,5 +262,45 @@ export class TestContext {
     const users = JSON.parse(fs.readFileSync(this._recordedUsersFilepath, 'utf8'));
     users.push({ environment, dataset, date, lastname, firstname, gender, email, password });
     fs.writeFileSync(this._recordedUsersFilepath, JSON.stringify(users));
+  }
+
+  /**
+   * Published the amqp message to the specified exchange.
+   * @template T
+   * @param {string} parameterName name of the environment parameter that defines the amqp connection string
+   * @param {string} exchange name of the exchange
+   * @param {string} routingKey routing key
+   * @param {string} type type of the message
+   * @param {T} payload message payload
+   * @param {string} correlationId correlation id for message tracking
+   * @returns {Promise<boolean>}
+   */
+  async publishMessage(parameterName, exchange, routingKey, type, payload, correlationId) {
+    const connectionString = this.getParameter(parameterName, true);
+    return publishMessage(connectionString, exchange, routingKey, type, payload, correlationId);
+  }
+
+  /**
+   * Executes the specified sql operation.
+   * @template T
+   * @param {string} parameterName name of the environment parameter that defines the sql connection string
+   * @param {(sql: import('mssql').Request) => T} sqlOperation function using the sql request object
+   * @returns {Promise<T>} sql query result
+   */
+  async executeSql(parameterName, sqlOperation) {
+    const connectionString = this.getParameter(parameterName, true);
+    return executeSql(connectionString, sqlOperation);
+  }
+
+  /**
+   * Runs the specified vtom job.
+   * @param {string} parameterName name of the environment parameter that defines the vtom configuration
+   * @param {string} appName vtom application name
+   * @param {string} jobName vtom job name
+   * @returns {Promise<boolean>} true if successful execution
+   */
+  async runVtomJob(parameterName, appName, jobName) {
+    const { url, apiKey, environment } = this.getParameter(parameterName, true);
+    return runVtomJob(url, apiKey, environment, appName, jobName);
   }
 }

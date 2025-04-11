@@ -48,7 +48,7 @@ export type TestEnvironmentConfiguration = {
   /** options of the environment */ options: EnvironmentOptions;
 };
 
-/** Custom options for the environement */
+/** Custom options for the environment */
 export type EnvironmentOptions = {
   /** Retrieve dataset **per environment** rather than globally. Dataset are global if not specified. */
   perEnvironmentData?: boolean;
