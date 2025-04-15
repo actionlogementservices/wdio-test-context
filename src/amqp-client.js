@@ -31,6 +31,7 @@ export async function publishMessage(connectionString, exchange, routingKey, typ
     const content = Buffer.from(JSON.stringify(payload));
     /** @type {import('amqplib').Options.Publish} */ const options = {
       appId,
+      headers: {},
       contentType: 'application/json',
       correlationId,
       timestamp: Date.now(),
