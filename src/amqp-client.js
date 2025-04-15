@@ -27,7 +27,7 @@ export async function publishMessage(connectionString, exchange, routingKey, typ
   let channel;
   try {
     connection = await amqp.connect(connectionString, { clientProperties: { connection_name: appId } });
-    channel = await connection.createChannel();
+    channel = await connection.createConfirmChannel();
     const content = Buffer.from(JSON.stringify(payload));
     /** @type {import('amqplib').Options.Publish} */ const options = {
       appId,
@@ -36,14 +36,21 @@ export async function publishMessage(connectionString, exchange, routingKey, typ
       timestamp: Date.now(),
       type
     };
-    const result = channel.publish(exchange, routingKey, content, options);
-    if (result) logger.debug('Amqp message sent.');
-    return result;
+    return new Promise((resolve, reject) =>
+      channel.publish(exchange, routingKey, content, options, error => {
+        if (error) {
+          logger.detailError(error);
+          reject(`Amqp error: '${error.message}'!`);
+        } else {
+          logger.debug('Amqp message sent.');
+          resolve(true);
+        }
+        if (channel) channel.close();
+        if (connection) connection.close();
+      })
+    );
   } catch (error) {
     logger.detailError(error);
     throw new Error(`Amqp error: '${error.message}'!`);
-  } finally {
-    if (channel) channel.close();
-    if (connection) connection.close();
   }
 }
