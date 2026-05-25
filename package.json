@@ -29,36 +29,39 @@
   "homepage": "https://github.com/actionlogementservices/wdio-test-context#readme",
   "devDependencies": {
     "@eslint/js": "^9.23.0",
-    "@wdio/spec-reporter": "^9.11.0",
+    "@wdio/spec-reporter": "^9.27.1",
     "eslint": "^9.23.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-array-func": "^5.0.2",
-    "eslint-plugin-prettier": "^5.2.3",
-    "eslint-plugin-promise": "^7.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-array-func": "^5.1.1",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-promise": "^7.3.0",
     "eslint-plugin-unicorn": "^57.0.0",
-    "globals": "^16.0.0",
-    "jsdoc": "^4.0.4",
+    "globals": "^17.6.0",
+    "jsdoc": "^4.0.5",
     "jsdoc-escape-at": "^1.0.1",
-    "kis-jsdoc-plugin": "^2.2.1",
-    "prettier": "^3.5.3"
+    "kis-jsdoc-plugin": "^2.2.3",
+    "prettier": "^3.8.3"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.6.0",
-    "amqplib": "^0.10.7",
-    "axios": "^1.8.4",
-    "azure-devops-node-api": "^14.1.0",
-    "chalk": "^5.4.1",
+    "@faker-js/faker": "^10.4.0",
+    "amqplib": "^2.0.1",
+    "axios": "^1.16.1",
+    "azure-devops-node-api": "^15.1.2",
+    "chalk": "^5.6.2",
     "dotenv-flow": "^4.1.0",
-    "glob": "^11.0.1",
-    "jspdf": "^3.0.1",
+    "glob": "^13.0.6",
+    "jspdf": "^4.2.1",
     "lodash.merge": "^4.6.2",
     "moment": "^2.30.1",
-    "msnodesqlv8": "^4.5.0",
-    "mssql": "^11.0.1",
-    "nodemailer": "^6.10.0",
+    "msnodesqlv8": "^5.2.0",
+    "mssql": "^12.5.4",
+    "nodemailer": "^8.0.8",
     "syswide-cas": "^5.3.0"
   },
   "peerDependencies": {
-    "@wdio/globals": "^9.12.1"
+    "@wdio/globals": "^9.27.1"
+  },
+   "engines": {
+        "node": ">=22"
   }
 }
