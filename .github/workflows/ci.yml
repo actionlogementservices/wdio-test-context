@@ -1,0 +1,31 @@
+# Runs the linter on every pull request (including Dependabot ones) and checks
+# that the published dependencies have no known vulnerability.
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      # install scripts are skipped (msnodesqlv8 native addon is not needed to lint)
+      - run: npm ci --ignore-scripts
+
+      - run: npm test
+
+      # only the dependencies shipped to the package users are checked: dev tooling advisories are left to Dependabot
+      # not blocking yet: the remaining advisories require the webdriverio 10 migration
+      - run: npm audit --omit=dev --audit-level=moderate
+        continue-on-error: true
