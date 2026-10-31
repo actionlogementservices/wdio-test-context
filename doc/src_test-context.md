@@ -82,6 +82,19 @@ __*return*__ | [TestContext](src_test-context.md) | **
 
 ---
 
+### `setSmtpServer(smtpServer) ► TestContext`
+
+![modifier: public](images/badges/modifier-public.png)
+
+Defines the **smtp server** used by the mail service to send emails.
+
+Parameters | Type | Description
+--- | --- | ---
+__smtpServer__ | `SmtpServer` | *smtp server*
+__*return*__ | [TestContext](src_test-context.md) | **
+
+---
+
 ### `setLogLevel(level)`
 
 ![modifier: public](images/badges/modifier-public.png)

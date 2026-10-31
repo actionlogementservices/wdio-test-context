@@ -24,6 +24,7 @@ import { runVtomJob } from './vtom-client.js';
 /** @typedef {import('./types.d.ts').MailProviderName} MailProviderName */
 /** @typedef {import('./types.d.ts').DataGenerator} DataGenerator */
 /** @typedef {import('./types.d.ts').LogLevel} LogLevel */
+/** @typedef {import('./types.d.ts').SmtpServer} SmtpServer */
 
 export const defaultDatasetName = 'default';
 const defaultRecordedUsersFilename = 'users.json';
@@ -39,6 +40,7 @@ export class TestContext {
   /** Test environments @private @type {Map<string, TestEnvironmentConfiguration>} */
   _environments = new Map();
   /** Mail provider name @private @type {MailProviderName} */ _mailProviderName;
+  /** Smtp server @private @type {SmtpServer} */ _smtpServer;
   /** data folder @private @type {string} */ _dataFolder;
   /** log folder @private @type {string} */ _logFolder;
   /** data folder @private @type {string} */ _recordedUsersFilepath;
@@ -91,6 +93,16 @@ export class TestContext {
   }
 
   /**
+   * Defines the **smtp server** used by the mail service to send emails.
+   * @param {SmtpServer} smtpServer smtp server
+   * @returns {TestContext}
+   */
+  setSmtpServer(smtpServer) {
+    this._smtpServer = smtpServer;
+    return this;
+  }
+
+  /**
    * Sets the logging level.
    * @param {LogLevel} level logging level
    */
@@ -109,7 +121,7 @@ export class TestContext {
       node_env: process.env.TARGET_ENV || this.defaultEnvironmentName
     });
     // email provider
-    this.mailService = new MailService(this._mailProviderName ?? defaultMailProviderName);
+    this.mailService = new MailService(this._mailProviderName ?? defaultMailProviderName, this._smtpServer);
     // data folder
     this._dataFolder =
       (this.environment.options.perEnvironmentData ?? false)
@@ -123,7 +135,7 @@ export class TestContext {
     // generate random user
     const user = this._generateRandomUser(this.mailService);
     // generate custom data
-    const customData = this._dataGenerator(this);
+    const customData = this._dataGenerator?.(this) ?? {};
     // load dataset
     const data = JSON.parse(fs.readFileSync(datasetFilepath, 'utf8'));
     // add dataset to test context
@@ -255,6 +267,9 @@ export class TestContext {
       fs.mkdirSync(this._logFolder, { recursive: true });
       fs.writeFileSync(this._recordedUsersFilepath, JSON.stringify([]));
     }
+    // recorded users contain passwords: never commit the log folder
+    const gitignoreFilepath = path.join(this._logFolder, '.gitignore');
+    if (!fs.existsSync(gitignoreFilepath)) fs.writeFileSync(gitignoreFilepath, '*\n');
     const { firstname, lastname, gender, email, password } = this.user;
     const environment = this.environmentName;
     const dataset = this.dataset;
