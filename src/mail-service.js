@@ -11,16 +11,20 @@ import * as provider from './page-objects/index.js';
 import { logger } from './logger.js';
 
 /** @typedef {import('./types.js').MailProvider} MailProvider */
+/** @typedef {import('./types.js').SmtpServer} SmtpServer */
 
 export class MailService {
   /** disposable email provider @type {MailProvider} */ provider;
+  /** smtp server used to send emails @type {SmtpServer | undefined} */ smtpServer;
 
   /**
    * Implements a service that sends and retrieves emails with a given provider.
    * @param {import('./types.js').MailProviderName} providerName disposable email provider name
+   * @param {SmtpServer} [smtpServer] smtp server used to send emails
    */
-  constructor(providerName) {
+  constructor(providerName, smtpServer) {
     this.provider = provider[providerName].default;
+    this.smtpServer = smtpServer;
   }
 
   /**
@@ -48,7 +52,10 @@ export class MailService {
    * @returns {Promise<void>}
    */
   async sendMessage(from, to, subject, html) {
-    const transporter = nodemailer.createTransport({ host: 'smtp.als.lan', secure: false, port: 25 });
+    if (!this.smtpServer?.host)
+      throw new Error('No smtp server defined! Call setSmtpServer on the test context to send emails.');
+    const { host, port, secure } = this.smtpServer;
+    const transporter = nodemailer.createTransport({ host, port: port ?? 25, secure: secure ?? false });
     await transporter.sendMail({ from, to, subject, html });
   }
 

@@ -23,6 +23,13 @@ export type MailProvider = {
   /** wdio logic to retieve email content */ getMessageContent: (index: number) => Promise<string>;
 };
 
+/** Smtp server used to send emails */
+export type SmtpServer = {
+  /** host name */ host: string;
+  /** port (25 by default) */ port?: number;
+  /** use TLS from the start of the connection (false by default) */ secure?: boolean;
+};
+
 /** Randomly auto generated user */
 export type TestUser = {
   /** last name */ lastname: string;
