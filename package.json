@@ -1,6 +1,6 @@
 {
   "name": "@actionlogementservices/wdio-test-context",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A framework to add test context to webdriverio end to end tests.",
   "main": "src/index.js",
   "type": "module",
@@ -12,7 +12,9 @@
   "scripts": {
     "prettier": "prettier \"./src/**/*.js\" --write",
     "eslint": "eslint \"./src/**/*.js\"",
-    "doc": "jsdoc -c ./.jsdoc.json"
+    "doc": "jsdoc -c ./.jsdoc.json",
+    "test": "npm run eslint",
+    "bump": "npm version --no-git-tag-version"
   },
   "repository": {
     "type": "git",
@@ -44,6 +46,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
+    "@wdio/reporter": "^9.27.1",
     "amqplib": "^2.0.1",
     "axios": "^1.16.1",
     "azure-devops-node-api": "^15.1.2",
@@ -59,7 +62,8 @@
     "syswide-cas": "^5.3.0"
   },
   "peerDependencies": {
-    "@wdio/globals": "^9.27.1"
+    "@wdio/globals": "^9.27.1",
+    "webdriverio": "^9.27.1"
   },
   "engines": {
     "node": ">=22"

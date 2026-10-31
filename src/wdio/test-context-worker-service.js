@@ -76,7 +76,7 @@ export default class TestContextWorkerService {
       const errorLines = stack?.split('at ') ?? [];
       const errorFile = errorLines
         .find((/** @type {string} */ l) => l.toLowerCase().includes('e2e.js'))
-        .trim();
+        ?.trim();
       const fileContent = `Test : ${test.fullName}\nErreur : ${message}${
         errorFile ? '\nEmplacement : ' + errorFile : ''
       }`;
