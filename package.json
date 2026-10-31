@@ -31,7 +31,7 @@
   "homepage": "https://github.com/actionlogementservices/wdio-test-context#readme",
   "devDependencies": {
     "@eslint/js": "^9.23.0",
-    "@wdio/spec-reporter": "^9.27.1",
+    "@wdio/spec-reporter": "^10.1.0",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-array-func": "^5.1.1",
