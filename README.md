@@ -15,7 +15,16 @@ A framework to add test context to webdriverio end to end tests.
 ## Prerequisites
 
 - Node.js 22 or later.
-- webdriverio 9 (`@wdio/globals` is a peer dependency).
+- webdriverio 9 or 10 (`webdriverio`, `@wdio/globals` and `@wdio/reporter` are peer dependencies, installed with the version of your test project).
+- webdriverio 10 requires Node.js 22.23.4+ (22.x), 24.22.1+ (24.x) or 26.12.1+.
+
+### Upgrading your test project to webdriverio 10
+
+Upgrade all the `@wdio/*` packages and `webdriverio` to 10 together, then adapt your configuration:
+
+- `jasmineOpts.stopSpecOnExpectationFailure` is replaced by `jasmineOpts.oneFailurePerSpec`.
+- `$()` is strict: a selector matching several elements throws a `StrictSelectorError`. Make your selectors unique, or set `strictSelectors: false` in your configuration while migrating.
+- `eslint-plugin-wdio` 10 requires eslint 10.
 
 ## Installation
 
